@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Decision</title>
+</head>
+<body>
+<h1>Loan Decision Engine</h1>
+
+<input id="personalCode" placeholder="Personal Code" />
+<input id="loanAmount" placeholder="Loan Amount" />
+<input id="loanPeriod" placeholder="Loan Period" />
+
+<button onclick="submitLoan()">Check</button>
+
+<p id="result"></p>
+
+<script>
+    async function submitLoan() {
+        const response = await fetch("/loan/decision_engine", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                personalCode: document.getElementById("personalCode").value,
+                loanAmount: parseInt(document.getElementById("loanAmount").value),
+                loanPeriod: parseInt(document.getElementById("loanPeriod").value)
+            })
+        });
+        const data = await response.json();
+        document.getElementById("result").innerText = data.decision + " - " + data.amount + "€";
+    }
+</script>
+</body>
+</html>
