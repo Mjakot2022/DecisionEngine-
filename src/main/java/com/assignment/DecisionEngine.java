@@ -30,11 +30,11 @@ public class DecisionEngine {
 
     private int getCreditModifier(String personalCode) {
         return switch (personalCode) {
-            case "49002010965" -> 0;    // debt
-            case "49002010976" -> 100;  // segment 1
-            case "49002010987" -> 300;  // segment 2
-            case "49002010998" -> 1000; // segment 3
-            default -> throw new IllegalArgumentException("Unknown personal code: " + personalCode);
+            case "49002010965" -> 0;
+            case "49002010976" -> 100;
+            case "49002010987" -> 300;
+            case "49002010998" -> 1000;
+            default -> throw new IllegalArgumentException("Unknown code: " + personalCode);
         };
     }
 }

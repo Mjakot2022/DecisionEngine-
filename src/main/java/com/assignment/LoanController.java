@@ -9,7 +9,7 @@ public class LoanController {
 
     private final DecisionEngine decisionEngine = new DecisionEngine();
 
-    @PostMapping("/loan/decision_engine")
+    @PostMapping("/loan/decision")
     public LoanDecision getDecision(@RequestBody LoanRequest request){
         return decisionEngine.calculateDecision(request);
 

@@ -16,7 +16,7 @@
 
 <script>
     async function submitLoan() {
-        const response = await fetch("/loan/decision_engine", {
+        const response = await fetch("/loan/decision", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
