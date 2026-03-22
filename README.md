@@ -41,7 +41,7 @@ Two simple classes were created to represent incoming and outgoing data:
 
 ### Decision Engine Logic
 
-The credit score formula provided in the spec is:
+The credit score formula provided is:
 ```
 credit_score = (credit_modifier / loan_amount) * loan_period
 ```
