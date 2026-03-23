@@ -1,5 +1,6 @@
 package com.assignment;
 
+/** Represents a loan request with personal code, requested amount, and loan period. */
 public class LoanRequest {
     private String personalCode;
     private int loanAmount;

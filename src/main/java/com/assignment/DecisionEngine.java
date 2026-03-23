@@ -1,31 +1,48 @@
 package com.assignment;
 
-public class DecisionEngine {
-    public LoanDecision calculateDecision(LoanRequest request) {
-        int creditModifier = getCreditModifier(request.getPersonalCode());
-        if (creditModifier == 0) {
-            return new LoanDecision("NEGATIVE", 0);
-        }
-        if (request.getLoanPeriod() < 12 || request.getLoanPeriod() > 60) {
-            return new LoanDecision("NEGATIVE", 0);
-        }
-        int period = request.getLoanPeriod();
-        int maxAmount = Math.min(creditModifier * period, 10000);
+/**
+ * The DecisionEngine class evaluates loan requests and provides a decision
+ * indicating whether the loan is approved or rejected.
+ * <p>
+ * It uses the client's personal code and requested loan period to determine
+ * the maximum approvable loan amount and returns the result as a LoanDecision object.
+ */
 
-        if (maxAmount >= 2000) {
-            return new LoanDecision("POSITIVE", maxAmount);
+public class DecisionEngine {
+
+    public enum DecisionStatus {
+        POSITIVE, NEGATIVE
+    }
+
+    private static final int MIN_PERIOD = 12;
+    private static final int MAX_PERIOD = 60;
+    private static final int MIN_APPROVABLE_AMOUNT = 2000;
+    private static final int MAX_APPROVABLE_AMOUNT = 10000;
+
+    public LoanDecision calculateDecision(LoanRequest request) {
+
+        int period = request.getLoanPeriod();
+        int creditModifier = getCreditModifier(request.getPersonalCode());
+
+        if (creditModifier <= 0 || period < MIN_PERIOD || period > MAX_PERIOD) {
+            return new LoanDecision(DecisionStatus.NEGATIVE.name(), 0);
         }
-        for (int newPeriod = Math.max(period + 1, 12); newPeriod <= 60; newPeriod++) {
-            maxAmount = Math.min(creditModifier * newPeriod, 10000);
-            if (maxAmount >= 2000) {
-                return new LoanDecision("POSITIVE", maxAmount);
+
+        int maxAmount = Math.min(creditModifier * period, MAX_APPROVABLE_AMOUNT);
+
+        if (maxAmount >= MIN_APPROVABLE_AMOUNT) {
+            return new LoanDecision(DecisionStatus.POSITIVE.name(), maxAmount);
+        }
+
+        for (int newPeriod = Math.max(period + 1, MIN_PERIOD); newPeriod <= MAX_PERIOD; newPeriod++) {
+            maxAmount = Math.min(creditModifier * newPeriod, MAX_APPROVABLE_AMOUNT);
+            if (maxAmount >= MIN_APPROVABLE_AMOUNT) {
+                return new LoanDecision(DecisionStatus.POSITIVE.name(), maxAmount);
             }
         }
 
-        return new LoanDecision("NEGATIVE", 0);
+        return new LoanDecision(DecisionStatus.NEGATIVE.name(), 0);
     }
-
-
 
 
     private int getCreditModifier(String personalCode) {
@@ -34,7 +51,7 @@ public class DecisionEngine {
             case "49002010976" -> 100;
             case "49002010987" -> 300;
             case "49002010998" -> 1000;
-            default -> throw new IllegalArgumentException("Unknown code: " + personalCode);
+            default -> -1;
         };
     }
 }

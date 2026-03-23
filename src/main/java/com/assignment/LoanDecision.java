@@ -1,6 +1,6 @@
 package com.assignment;
 
-
+/** Represents the result of a loan request, including decision and approved amount. */
 public class LoanDecision {
     private String decision;
     private int amount;

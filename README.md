@@ -8,6 +8,7 @@ A decision engine that determines the maximum approvable loan amount for a given
 2. Open the project in IntelliJ IDEA
 3. Run `LoanApplication.java`
 4. Open `http://localhost:8080` in your browser
+5. Can run the test cases in `DecisionEngineTest`
 
 ---
 
@@ -40,6 +41,7 @@ Two simple classes were created to represent incoming and outgoing data:
 ---
 
 ### Decision Engine Logic
+For code clarity represent the possible outcomes of a loan request (POSITIVE or NEGATIVE) using an enum and all fixed values as constants.
 
 The credit score formula provided is:
 ```
@@ -58,7 +60,7 @@ So the maximum approvable amount is always:
 max_amount = credit_modifier * loan_period
 ```
 
-This value is then clamped to the allowed range of 2000–10000€. The requested loan amount is intentionally not used in this calculation — the spec explicitly states the engine should always return the maximum approvable sum, so computing it directly is more efficient.
+This value is then clamped to the allowed range of 2000–10000€. The requested loan amount is intentionally not used in this calculation — the assignment states the engine should always return the maximum approvable sum, so computing it directly is more efficient.
 
 If the calculated maximum falls below 2000€ (meaning the requested period is too short for any valid loan to be issued), the engine **increments the loan period by one month at a time** up to the 60-month cap and recalculates, looking for the earliest period where a valid loan becomes possible.
 
@@ -79,6 +81,7 @@ If a person has debt, no loan amount is approved regardless of the period.
 The engine validates inputs before processing:
 - Loan amount must be between 2000€ and 10000€
 - Loan period must be between 12 and 60 months
+- Personal code has to exist in "database".
 
 Invalid inputs return a `NEGATIVE` decision immediately without running the algorithm.
 
@@ -88,4 +91,4 @@ A plain HTML page was chosen over React or TypeScript to keep the project simple
 ---
 
 ## What I Would Improve
-The requested loan amount is effectively redundant in the current algorithm — the engine ignores it and always calculates the maximum approvable amount anyway. I would redesign the algorithm to make the requested amount meaningful, for example by first checking whether the exact requested amount can be approved, and only searching for alternatives if it cannot. This would make the engine more realistic and the input more purposeful.
+Firstly, The requested loan amount is  redundant in current algorithm because the engine ignores it and always calculates the maximum approvable amount anyway. I would redesign the algorithm to make the requested amount meaningful, for example by first checking whether the exact requested amount can be approved, and only searching for alternatives if it cannot. Secondly, the period for the load could be modified if the loan amount is too small, however the client will never know that because we do not return the period. These both changes would make the engine more realistic and more purposeful.
